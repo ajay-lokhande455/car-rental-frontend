@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
+import { closeSignUp, openLogin } from "../features/auth/formSlice";
 
 const SignUpForm = () => {
+  const { isLoginOpen, isSignUpOpen } = useSelector((state) => state.form);
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -94,14 +97,14 @@ const SignUpForm = () => {
     dispatch(openLogin());
   };
 
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white px-6 py-4 rounded-lg shadow-lg ">
+  return isSignUpOpen ? (
+    <div className="fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50">
+    <div className="bg-white px-6 py-4 rounded-lg shadow-lg w-98">
         <div className="flex justify-between border-b-1 py-1 border-gray-200 my-2">
           <h2 className="text-xl font-semibold  text-gray-700 mb-4">
             Sign Up
           </h2>
-          <RxCross2 size={"24px"} className="text-gray-600 cursor-pointer" />
+          <RxCross2 size={"24px"} className="text-gray-600 cursor-pointer" onClick={() => dispatch(closeSignUp())} />
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -137,9 +140,8 @@ const SignUpForm = () => {
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
             </div>
-          </div>
 
-          <div className="mb-4">
+            <div className="mb-4">
             <label className="block text-gray-600 text-sm mb-1">
               Phone Number
             </label>
@@ -154,6 +156,7 @@ const SignUpForm = () => {
             {errors.phone && (
               <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
             )}
+          </div>
           </div>
 
           <div className="flex gap-4">
@@ -192,6 +195,7 @@ const SignUpForm = () => {
             </div>
           </div>
 
+          <div className="flex gap-4 ">
           <div className="mb-4">
             <label className="block text-gray-600 text-sm mb-1">Role</label>
             <div className="flex gap-4">
@@ -241,6 +245,7 @@ const SignUpForm = () => {
               </p>
             )}
           </div>
+          </div>
 
           <div className="mb-4">
             <label className="block text-gray-600 text-sm mb-1">Address</label>
@@ -267,13 +272,13 @@ const SignUpForm = () => {
 
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account?{" "}
-          <a href="#" className="text-blue-500 hover:underline" onClick={handleOpenLogin}>
+          <button  className="text-blue-500 hover:underline" onClick={handleOpenLogin}>
             Login
-          </a>
+          </button>
         </p>
       </div>
-    </div>
-  );
+      </div>
+  ): null ;
 };
 
 export default SignUpForm;
